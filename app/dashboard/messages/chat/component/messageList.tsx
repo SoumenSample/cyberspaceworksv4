@@ -172,19 +172,19 @@ export function MessageList({ messages, users, currentUserId = "current-user" }:
                   <div
                     key={message.id}
                     className={cn(
-                      "flex gap-3 group",
-                      isOwnMessage && "flex-row-reverse",
+                      "flex items-start group",
+                      isOwnMessage ? "justify-end" : "justify-start",
                       isConsecutive && !isOwnMessage && "ml-12"
                     )}
                   >
-                    {/* Avatar */}
+                    {/* Avatar for others */}
                     {!isOwnMessage && (
-                      <div className="w-8">
+                      <div className="w-10 flex-shrink-0">
                         {showAvatar && user && (
                           <Avatar className="h-8 w-8 cursor-pointer">
                             <AvatarImage src={user.avatar} alt={user.name} />
                             <AvatarFallback className="text-xs">
-                              {user.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                              {user.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
                             </AvatarFallback>
                           </Avatar>
                         )}
@@ -192,7 +192,10 @@ export function MessageList({ messages, users, currentUserId = "current-user" }:
                     )}
 
                     {/* Message content */}
-                    <div className={cn("flex-1 max-w-[70%]", isOwnMessage && "flex flex-col items-end")}>
+                    <div className={cn(
+                      "max-w-[70%]",
+                      isOwnMessage ? "ml-auto text-right" : "mr-auto text-left"
+                    )}>
                       {/* Sender name for group messages */}
                       {showName && user && !isOwnMessage && (
                         <div className="text-sm font-medium text-foreground mb-1">
@@ -204,18 +207,18 @@ export function MessageList({ messages, users, currentUserId = "current-user" }:
                       <div className="relative group/message">
                         <div
                           className={cn(
-                            "rounded-lg px-3 py-2 text-sm break-words",
+                            "rounded-lg px-4 py-3 text-sm break-words shadow-sm",
                             isOwnMessage
-                              ? "bg-primary text-primary-foreground"
-                              : "bg-muted",
+                              ? "bg-indigo-600 text-white"
+                              : "bg-zinc-800 text-white",
                             isConsecutive && "mt-1"
                           )}
                         >
-                          <p>{message.content}</p>
+                          <p className="whitespace-pre-wrap">{message.content}</p>
 
                           {/* Message reactions */}
                           {message.reactions.length > 0 && (
-                            <div className="flex gap-1 mt-2">
+                            <div className="flex gap-1 mt-2 justify-center">
                               {message.reactions.map((reaction, idx) => (
                                 <div
                                   key={idx}
@@ -233,10 +236,8 @@ export function MessageList({ messages, users, currentUserId = "current-user" }:
 
                           {/* Timestamp and status */}
                           <div className={cn(
-                            "flex items-center gap-1 mt-1 text-xs",
-                            isOwnMessage
-                              ? "text-primary-foreground/70 justify-end"
-                              : "text-muted-foreground"
+                            "flex items-center gap-2 mt-2 text-xs",
+                            isOwnMessage ? "justify-end text-white/80" : "text-muted-foreground"
                           )}>
                             <span>{formatMessageTime(message.timestamp)}</span>
                             {message.isEdited && (
@@ -244,15 +245,19 @@ export function MessageList({ messages, users, currentUserId = "current-user" }:
                             )}
                             {isOwnMessage && (
                               <div className="flex">
-                                {/* Message status indicators */}
                                 <CheckCheck className="h-3 w-3" />
                               </div>
                             )}
                           </div>
                         </div>
 
-                        {/* Message actions */}
-                        <div className="absolute top-0 right-0 opacity-0 group-hover/message:opacity-100">
+                        {/* Message actions - positioned inside bubble for own messages */}
+                        <div
+                          className={cn(
+                            "opacity-0 group-hover/message:opacity-100",
+                            isOwnMessage ? "absolute top-1 left-2" : "absolute top-1 right-1"
+                          )}
+                        >
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button
