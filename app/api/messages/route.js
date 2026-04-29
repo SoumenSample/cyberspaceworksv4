@@ -60,5 +60,43 @@ export async function POST(req) {
     text: "New message",
   });
 
+  // Fallback: if the socket server runs as a separate process (e.g., on Render),
+  // POST to the socket server `/emit` endpoint so it can forward the event.
+  // This is useful in production where `emitToUsers` may be a no-op.
+  if (process.env.NEXT_PUBLIC_SOCKET_URL) {
+    try {
+      const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL.replace(/\/$/, "");
+
+      // send receive-message
+      await fetch(`${socketUrl}/emit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userIds: [receiver._id?.toString?.() || receiver._id],
+          eventName: "receive-message",
+          payload: message,
+          secret: process.env.SOCKET_EMIT_SECRET || undefined,
+        }),
+      }).catch(() => {})
+
+      // send notification
+      await fetch(`${socketUrl}/emit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userIds: [receiver._id?.toString?.() || receiver._id],
+          eventName: "notification",
+          payload: {
+            type: "chat",
+            text: "New message",
+          },
+          secret: process.env.SOCKET_EMIT_SECRET || undefined,
+        }),
+      }).catch(() => {})
+    } catch (err) {
+      // swallow errors - failure to notify socket server shouldn't block message creation
+    }
+  }
+
   return Response.json({ message });
 }

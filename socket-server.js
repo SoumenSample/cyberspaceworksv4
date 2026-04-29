@@ -157,3 +157,37 @@ httpServer.listen(port, "0.0.0.0", () => {
   console.log(`⚡ Socket server running on port ${port}`);
   console.log(`CORS Origins: ${allowedOrigins.length > 0 ? allowedOrigins.join(", ") : "All origins"}`);
 });
+
+// Simple HTTP endpoint to allow other services (like serverless API routes)
+// to trigger socket emits when the socket server is deployed separately.
+httpServer.on("request", (req, res) => {
+  if (req.method === "POST" && req.url === "/emit") {
+    let body = "";
+    req.on("data", (chunk) => (body += chunk));
+    req.on("end", () => {
+      try {
+        const data = JSON.parse(body || "{}");
+        const { userIds, eventName, payload, secret } = data;
+
+        // Optional secret check to avoid unauthorized emit requests
+        if (process.env.SOCKET_EMIT_SECRET) {
+          if (!secret || secret !== process.env.SOCKET_EMIT_SECRET) {
+            res.writeHead(403, { "Content-Type": "application/json" });
+            return res.end(JSON.stringify({ ok: false, error: "Forbidden" }));
+          }
+        }
+
+        const ok = emitToUsers(userIds, eventName, payload);
+        res.writeHead(200, { "Content-Type": "application/json" });
+        return res.end(JSON.stringify({ ok }));
+      } catch (err) {
+        res.writeHead(400, { "Content-Type": "application/json" });
+        return res.end(JSON.stringify({ ok: false, error: "Bad Request" }));
+      }
+    });
+    return;
+  }
+
+  res.writeHead(404, { "Content-Type": "text/plain" });
+  res.end("Not Found");
+});

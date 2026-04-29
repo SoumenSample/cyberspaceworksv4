@@ -50,6 +50,16 @@
 - `PORT`: Auto-assigned by Render (default 5000)
 - `SOCKET_CORS_ORIGIN`: Your Vercel frontend URL (comma-separated for multiple)
 
+### Socket Server emit endpoint
+
+- The socket server exposes a simple HTTP endpoint to allow serverless API routes
+   to trigger emits when the socket server is deployed separately.
+- Endpoint: `POST /emit`
+- Payload: `{ userIds: string[], eventName: string, payload: any, secret?: string }`
+- To secure this endpoint, set `SOCKET_EMIT_SECRET` on both the socket server and
+   your backend. When `SOCKET_EMIT_SECRET` is set, requests must include the same
+   `secret` value in the POST body.
+
 ### Frontend (Vercel) - Next.js
 - `NEXT_PUBLIC_SOCKET_URL`: Your Render socket server URL
 
