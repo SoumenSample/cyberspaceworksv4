@@ -207,7 +207,8 @@ export default async function TaskPage() {
   // ✅ DB
   await connectToDatabase();
 
-  const users = await User.find({}, { passwordHash: 0 })
+  const users = await User.find()
+    .select("-passwordHash")
     .sort({ name: 1 })
     .lean();
 

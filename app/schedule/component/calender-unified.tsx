@@ -178,9 +178,9 @@ const getEventsForDay = (date: Date) => {
 
                 {/* Events */}
                 <div className="space-y-1">
-                  {dayEvents.slice(0, 3).map((event) => (
+                  {dayEvents.slice(0, 3).map((event, idx) => (
                     <div
-                      key={event.id}
+                      key={event.id ?? `${day.toISOString()}-${idx}`}
                       className={cn(
                         "text-xs px-2 py-1 rounded text-white cursor-pointer hover:opacity-80 transition-opacity truncate dark:text-white",
                         event.color

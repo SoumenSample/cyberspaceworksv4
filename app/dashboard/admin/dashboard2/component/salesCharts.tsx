@@ -390,3 +390,5 @@ export function ChartAreaInteractive() {
     </div>
   );
 }
+
+export const SalesChart = ChartAreaInteractive

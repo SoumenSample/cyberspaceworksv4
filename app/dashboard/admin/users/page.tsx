@@ -26,6 +26,7 @@ interface User {
   plan?: string
   billing?: string
   status?: string
+  isActive?: boolean
   joinedDate?: string
   lastLogin?: string
 }

@@ -129,21 +129,21 @@ export function AppSidebar({
   }
 
   const navSecondary = [
-    {
-      title: "Profile",
-      url: roleHomePath,
-      icon: <UserRoundIcon />,
-    },
-    {
-      title: "Settings",
-      url: roleHomePath,
-      icon: <Settings2Icon />,
-    },
-    {
-      title: "Get Help",
-      url: "/contact-us",
-      icon: <LifeBuoyIcon />,
-    },
+    // {
+    //   title: "Profile",
+    //   url: roleHomePath,
+    //   icon: <UserRoundIcon />,
+    // },
+    // {
+    //   title: "Settings",
+    //   url: roleHomePath,
+    //   icon: <Settings2Icon />,
+    // },
+    // {
+    //   title: "Get Help",
+    //   url: "/contact-us",
+    //   icon: <LifeBuoyIcon />,
+    // },
   ]
 
   return (

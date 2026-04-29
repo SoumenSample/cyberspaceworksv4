@@ -1,16 +1,31 @@
-"use client";
+"use client"
+
 import * as React from "react"
 import { ToggleGroup as ToggleGroupPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 import { toggleVariants } from "@/components/ui/toggle"
 
-const ToggleGroupContext = React.createContext({
+type ToggleGroupContextValue = {
+  size?: string
+  variant?: string
+  spacing?: number
+  orientation?: string
+}
+
+const ToggleGroupContext = React.createContext<ToggleGroupContextValue>({
   size: "default",
   variant: "default",
   spacing: 0,
   orientation: "horizontal",
 })
+
+type ToggleGroupProps = React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Root> & {
+  variant?: string
+  size?: string
+  spacing?: number
+  orientation?: string
+}
 
 function ToggleGroup({
   className,
@@ -20,7 +35,7 @@ function ToggleGroup({
   orientation = "horizontal",
   children,
   ...props
-}) {
+}: ToggleGroupProps) {
   return (
     <ToggleGroupPrimitive.Root
       data-slot="toggle-group"
@@ -29,18 +44,24 @@ function ToggleGroup({
       data-spacing={spacing}
       data-orientation={orientation}
       style={{
-        "--gap": spacing
-      }}
+        "--gap": spacing,
+      } as React.CSSProperties}
       className={cn(
         "group/toggle-group flex w-fit flex-row items-center gap-[--spacing(var(--gap))] rounded-lg data-[size=sm]:rounded-[min(var(--radius-md),10px)] data-vertical:flex-col data-vertical:items-stretch",
         className
       )}
-      {...props}>
+      {...props}
+    >
       <ToggleGroupContext.Provider value={{ variant, size, spacing, orientation }}>
         {children}
       </ToggleGroupContext.Provider>
     </ToggleGroupPrimitive.Root>
-  );
+  )
+}
+
+type ToggleGroupItemProps = React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Item> & {
+  variant?: string
+  size?: string
 }
 
 function ToggleGroupItem({
@@ -49,7 +70,7 @@ function ToggleGroupItem({
   variant = "default",
   size = "default",
   ...props
-}) {
+}: ToggleGroupItemProps) {
   const context = React.useContext(ToggleGroupContext)
 
   return (
@@ -61,15 +82,16 @@ function ToggleGroupItem({
       className={cn(
         "shrink-0 group-data-[spacing=0]/toggle-group:rounded-none group-data-[spacing=0]/toggle-group:px-2 focus:z-10 focus-visible:z-10 group-data-[spacing=0]/toggle-group:has-data-[icon=inline-end]:pr-1.5 group-data-[spacing=0]/toggle-group:has-data-[icon=inline-start]:pl-1.5 group-data-horizontal/toggle-group:data-[spacing=0]:first:rounded-l-lg group-data-vertical/toggle-group:data-[spacing=0]:first:rounded-t-lg group-data-horizontal/toggle-group:data-[spacing=0]:last:rounded-r-lg group-data-vertical/toggle-group:data-[spacing=0]:last:rounded-b-lg group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:border-l-0 group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:border-t-0 group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-l group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-t",
         toggleVariants({
-          variant: context.variant || variant,
-          size: context.size || size,
+          variant: (context.variant || variant) as any,
+          size: (context.size || size) as any,
         }),
         className
       )}
-      {...props}>
+      {...props}
+    >
       {children}
     </ToggleGroupPrimitive.Item>
-  );
+  )
 }
 
 export { ToggleGroup, ToggleGroupItem }

@@ -135,7 +135,7 @@ export function DataTable({ users, onDeleteUser, onEditUser, onAddUser }: DataTa
           <Checkbox
             checked={
               table.getIsAllPageRowsSelected() ||
-              (table.getIsSomePageRowsSelected() && "indeterminate")
+              (table.getIsSomePageRowsSelected() ? "indeterminate" : false)
             }
             onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
             aria-label="Select all"

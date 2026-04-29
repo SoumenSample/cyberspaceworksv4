@@ -96,7 +96,6 @@ export default function TaskClient({ session, users }: any) {
           sessionUserId={session.user.id}
           users={users}
           canEditTasks
-          onAddTask={handleAddTask}
         />
       </div>
     </>

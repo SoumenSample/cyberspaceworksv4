@@ -133,13 +133,13 @@ export function DataTable({ users, onDeleteUser, onEditUser, onAddUser }: DataTa
       header: ({ table }) => (
         <div className="flex items-center justify-center px-2">
           <Checkbox
-          className=""
             checked={
               table.getIsAllPageRowsSelected() ||
-              (table.getIsSomePageRowsSelected() && "indeterminate")
+              (table.getIsSomePageRowsSelected() ? "indeterminate" : false)
             }
             onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
             aria-label="Select all"
+            className=""
           />
         </div>
       ),
