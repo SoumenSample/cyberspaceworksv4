@@ -23,6 +23,7 @@ interface ChatProps {
   messages: Record<string, Message[]>
   users: User[]
   onSendMessageApi?: (receiverId: string, content: string) => Promise<Message | null>
+  currentUserId?: string
 }
 
 export function Chat({
@@ -30,6 +31,7 @@ export function Chat({
   messages,
   users,
   onSendMessageApi,
+  currentUserId,
 }: ChatProps) {
   return (
     <ChatProvider
@@ -261,7 +263,8 @@ function ChatInner({
               <>
                 <MessageList
                   messages={filteredMessages}
-                  users={currentUsers}
+                    users={currentUsers}
+                    currentUserId={currentUserId}
                 />
 
                 {/* Message Input */}
