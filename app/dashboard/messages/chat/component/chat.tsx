@@ -54,6 +54,7 @@ function ChatInner({
   messages,
   users,
   onSendMessageApi,
+  currentUserId,
 }: ChatProps) {
   const {
     selectedConversation,
@@ -263,8 +264,8 @@ function ChatInner({
               <>
                 <MessageList
                   messages={filteredMessages}
-                    users={currentUsers}
-                    currentUserId={currentUserId}
+                  users={currentUsers}
+                  currentUserId={currentUserId}
                 />
 
                 {/* Message Input */}

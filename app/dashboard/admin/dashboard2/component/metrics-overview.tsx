@@ -10,7 +10,7 @@ import {
 } from "lucide-react"
 import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 
 const metrics = [
   {
@@ -87,30 +87,24 @@ export function MetricsOverview() {
     }
     fetchLeads();
   }, []);
-   async function loadProjects() {
+  const loadProjects = useCallback(async () => {
       try {
         setLoadingProjects(true);
         setProjectError("");
   
         const response = await fetch("/api/projects", { cache: "no-store" });
         const data = await response.json();
-        console.log(data);
         setProjects(data.projects.length || []);
-        console.log("Projects loaded:", projects);
-     
-  
-  
-        
       } catch (error) {
         setProjectError(error.message || "Failed to load projects");
       } finally {
         setLoadingProjects(false);
       }
-    }
+      }, []);
   
     useEffect(() => {
       loadProjects();
-    }, []);
+    }, [loadProjects]);
     
 
   const metrics = [

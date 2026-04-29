@@ -1,6 +1,6 @@
 "use client"
 
-import { type ReactNode, createContext, createElement, useContext, useMemo, useState } from "react"
+import { type ReactNode, createContext, createElement, useCallback, useContext, useMemo, useState } from "react"
 
 export type MessageType = "text" | "image" | "file"
 
@@ -130,7 +130,7 @@ export function ChatProvider({
     )
   }
 
-  const removeConversation = (conversationId: string) => {
+  const removeConversation = useCallback((conversationId: string) => {
     setCurrentConversations((prev) => prev.filter((conversation) => conversation.id !== conversationId))
     setCurrentMessagesByConversation((prev) => {
       const next = { ...prev }
@@ -146,7 +146,7 @@ export function ChatProvider({
       const nextConversation = currentConversations.find((conversation) => conversation.id !== conversationId)
       return nextConversation?.id ?? null
     })
-  }
+  }, [currentConversations])
 
   const value = useMemo(
     () => ({
@@ -171,6 +171,7 @@ export function ChatProvider({
       currentUsers,
       searchQuery,
       messageSearchQuery,
+      removeConversation,
     ]
   )
 

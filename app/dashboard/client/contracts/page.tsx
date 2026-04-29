@@ -155,7 +155,7 @@
 "use client"
 
 import { useSession } from "next-auth/react"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 export default function ClientContracts() {
   const { data: session } = useSession()
@@ -168,14 +168,14 @@ export default function ClientContracts() {
   const [date, setDate] = useState("")
   const [submitting, setSubmitting] = useState(false)
 
-  const loadContracts = async () => {
+  const loadContracts = useCallback(async () => {
     if (!email) return
     const res = await fetch(`/api/contracts?email=${email}`)
     const data = await res.json()
     setContracts(data.contracts || [])
-  }
+  }, [email])
 
-  useEffect(() => { if (email) loadContracts() }, [email])
+  useEffect(() => { if (email) loadContracts() }, [email, loadContracts])
 
   const handleSubmit = async () => {
     if (!signature || !date) {

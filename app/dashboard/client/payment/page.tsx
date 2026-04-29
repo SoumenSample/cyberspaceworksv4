@@ -43,7 +43,7 @@
 "use client"
 
 import { useSession } from "next-auth/react"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 export default function ClientPayment() {
   const { data: session } = useSession()
@@ -51,14 +51,14 @@ export default function ClientPayment() {
 
   const [payments, setPayments] = useState([])
 
-  const load = async () => {
+  const load = useCallback(async () => {
     if (!email) return
     const res = await fetch(`/api/payments?email=${email}`)
     const data = await res.json()
     setPayments(data.payments || [])
-  }
+  }, [email])
 
-  useEffect(() => { if (email) load() }, [email])
+  useEffect(() => { if (email) load() }, [email, load])
 
   const totalPaid = payments.reduce((sum: number, p: any) => sum + (p.amount || 0), 0)
   const totalFees = payments.reduce((sum: number, p: any) => sum + (p.totalFee || 0), 0)

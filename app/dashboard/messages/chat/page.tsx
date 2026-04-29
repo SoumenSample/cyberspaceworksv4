@@ -151,7 +151,7 @@ export default function ChatPage() {
         messages={messages}
         users={users}
         onSendMessageApi={sendMessage}
-        currentUserId={session?.user?.id}
+        currentUserId={(session?.user as { id?: string } | undefined)?.id}
       />
     </div>
   )
