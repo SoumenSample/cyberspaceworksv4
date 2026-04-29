@@ -147,7 +147,7 @@ export function AppSidebar({
   ]
 
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
+    <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -172,8 +172,8 @@ export function AppSidebar({
             avatar: user?.avatar || "/logo2.png",
           }}
         />
-        <div className="px-2 pb-2">
-          <LogoutButton className="w-full justify-center" />
+        <div className="px-2 pb-2 group-data-[collapsible=icon]:px-0">
+          <LogoutButton className="w-full justify-center group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:px-0" />
         </div>
       </SidebarFooter>
     </Sidebar>
